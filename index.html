@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Gamedev Canvas Workshop</title>
+    <style>
+    	* { padding: 0; margin: 0; }
+    	canvas { background: #eee; display: block; margin: 0 auto; }
+    </style>
+</head>
+<body>
+<p> hello joe </p>
+<p id="display"> hewwo</p>
+<p id="ddisplay"> ddisplay </p>
+
+
+<br><br><br><br>
+
+<canvas id="myCanvas" width="720" height="480"></canvas>
+
+<script>
+var canvas = document.getElementById("myCanvas");
+var ctx = canvas.getContext("2d");
+var dx = 0.4;
+var ballRadius = 24;
+var tinyCircleRadius = ballRadius/3;
+var theyta = 0;
+var triangleArray = [];
+
+var Player = function(xArg,yArg){
+    this.x = xArg;
+    this.y = yArg;
+};
+Player.prototype.drawBall = function() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, ballRadius, 0, Math.PI*2);
+    ctx.fillStyle = "#0095DD";
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(this.tinyCircleX, this.tinyCircleY, tinyCircleRadius, 0, Math.PI*2);
+    ctx.fillStyle = "white";
+    ctx.fill();
+};
+Player.prototype.movePlayer = function(){
+    theyta += Math.PI/50;
+    if (theyta>=Math.PI*2){
+        theyta-=Math.PI*2;
+    }
+    this.tinyCircleX = (ballRadius+tinyCircleRadius)/2*Math.cos(theyta)+this.x;
+    this.tinyCircleY = (ballRadius+tinyCircleRadius)/2*Math.sin(theyta)+this.y;
+    this.drawBall();
+    this.x+=dx;
+};
+var testIter = 0;
+
+checkTriangles = function(){
+    if (triangleArray.length>0){
+        triangleArray.forEach(function (item,index,array){
+        //for (var tri in triangleArray){
+            document.getElementById("display").innerHTML = String(item);
+            console.log(item);
+            drawTriangle(item.x,item.y,item.size);
+        });
+    } 
+};
+
+drawTriangle = function(xArg,yArg,sizeArg){
+    ctx.beginPath();
+    ctx.moveTo(xArg,yArg);
+    ctx.lineTo(xArg+sizeArg,yArg-sizeArg);
+    ctx.lineTo(xArg+sizeArg,yArg);
+    ctx.fillStyle = "red";
+    ctx.fill();
+    testIter+=5;
+    document.getElementById("ddisplay").innerHTML = testIter;
+};
+
+setTriangle = function (xArg,yArg,sizeArg){
+    var newTri = {
+        "x":xArg,
+        "y":yArg,
+        "size":sizeArg
+    };
+    triangleArray.push(newTri);
+};
+
+var Timmy = new Player(100,canvas.height-ballRadius);
+
+function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    Timmy.movePlayer();
+    checkTriangles();
+    //drawTriangle(0,canvas.height,150);
+}
+setInterval(draw,10);
+
+setTriangle(0,canvas.height,150);
+//document.getElementById("display").innerHTML = triangleArray.size;
+
+</script>
+
+
+</body>
+</html>
