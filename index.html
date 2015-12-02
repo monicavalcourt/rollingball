@@ -14,7 +14,7 @@
 <p id="ddisplay"> ddisplay </p>
 
 
-<br><br><br><br>
+<br><br><br><br><br>
 
 <canvas id="myCanvas" width="720" height="480"></canvas>
 
@@ -51,15 +51,18 @@ Player.prototype.movePlayer = function(){
     this.tinyCircleY = (ballRadius+tinyCircleRadius)/2*Math.sin(theyta)+this.y;
     this.drawBall();
     this.x+=dx;
+    document.getElementById("display").innerHTML = "FUCK YOU";
+    triangleArray.forEach(function(item,index,array){
+        if (this.x>item.x && this.x<item.x+item.size){
+            this.y-=item.size;
+        }
+    });
 };
 var testIter = 0;
 
 checkTriangles = function(){
     if (triangleArray.length>0){
         triangleArray.forEach(function (item,index,array){
-        //for (var tri in triangleArray){
-            document.getElementById("display").innerHTML = String(item);
-            console.log(item);
             drawTriangle(item.x,item.y,item.size);
         });
     } 
@@ -73,7 +76,6 @@ drawTriangle = function(xArg,yArg,sizeArg){
     ctx.fillStyle = "red";
     ctx.fill();
     testIter+=5;
-    document.getElementById("ddisplay").innerHTML = testIter;
 };
 
 setTriangle = function (xArg,yArg,sizeArg){
@@ -91,12 +93,10 @@ function draw(){
     ctx.clearRect(0,0,canvas.width,canvas.height);
     Timmy.movePlayer();
     checkTriangles();
-    //drawTriangle(0,canvas.height,150);
 }
 setInterval(draw,10);
 
 setTriangle(0,canvas.height,150);
-//document.getElementById("display").innerHTML = triangleArray.size;
 
 </script>
 
